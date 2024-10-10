@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: dev-memory
+    default: default-profile
+  security:
+    jwt:
+      secret-key: 'SECRET-KEY-JWT-007'
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: your-client-id
+            client-secret: your-client-client-secret
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            scope:
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            user-name-attribute: sub

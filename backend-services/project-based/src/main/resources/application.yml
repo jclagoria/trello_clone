@@ -1,0 +1,17 @@
+server:
+  port: 8090
+
+## URL Rest Services applicacion
+trello:
+  baseURL: 'api/service'
+  healthAPI: '/status'
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

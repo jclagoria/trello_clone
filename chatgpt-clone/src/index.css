@@ -1,0 +1,237 @@
+/* Estilos globales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #000;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.header-actions a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #000;
+}
+
+/* Intro section styles */
+.intro-section {
+    height: calc(100vh - 140px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.intro-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.intro-section p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+    max-width: 600px;
+}
+
+.intro-section button {
+    padding: 15px 30px;
+    font-size: 1.25rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Footer styles */
+footer {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+footer p {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+
+    .intro-section {
+        padding: 30px;
+    }
+
+    .intro-section h2 {
+        font-size: 2rem;
+    }
+
+    .intro-section p {
+        font-size: 1rem;
+    }
+
+    .intro-section button {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        margin-top: 10px;
+    }
+
+    .intro-section h2 {
+        font-size: 1.75rem;
+    }
+
+    .intro-section p {
+        font-size: 0.9rem;
+    }
+
+    .intro-section button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Sign Up page styles */
+.signup-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.signup-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.signup-button {
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.signup-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+
+.success-message {
+    color: green;
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .signup-container {
+        margin: 50px auto;
+        padding: 15px;
+    }
+
+    .signup-button {
+        font-size: 1rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .signup-container {
+        margin: 30px auto;
+        padding: 10px;
+    }
+
+    .signup-button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}

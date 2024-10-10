@@ -1,0 +1,29 @@
+server:
+  port: 8090
+
+## URL Rest Services application
+trello:
+  baseURL: 'api/service'
+  healthAPI: '/status'
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, info
+      cors:
+        allowed-methods: "*"
+        allowed-origin-patterns:
+            - http://localhost:5173
+            - http://127.0.0.1:5175
+        allowed-headers: "Authorization, Content-Type"
+        allow-credentials: true
+  endpoint:
+    health:
+      show-details: always
+
+
+spring:
+  profiles:
+    active: dev-database

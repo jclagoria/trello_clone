@@ -1,0 +1,14 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/trello_clone
+    username: postgres
+    password: mypgdbpass
+    pool:
+      initial-size: 2
+      enabled: true
+      max-size: 10
+logging:
+  level:
+    root: INFO
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.r2dbc: DEBUG
