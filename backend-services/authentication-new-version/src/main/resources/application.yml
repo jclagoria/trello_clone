@@ -1,9 +1,0 @@
-spring:
-  profiles:
-    active: dev-memory
-    default: default-profile
-  security:
-    jwt:
-      secret-key: 'SECRET-KEY-JWT-007'
-server:
-  port: 8090

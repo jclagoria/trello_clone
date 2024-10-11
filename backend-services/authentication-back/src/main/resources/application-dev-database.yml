@@ -1,9 +1,0 @@
-spring:
-  r2dbc:
-    url: r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-    pool:
-      initial-size: 2
-      enabled: true
-      max-size: 10
