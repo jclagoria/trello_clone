@@ -31,27 +31,7 @@ public class SecurityConfig {
                         .anyExchange().authenticated() // Secure all other routes
                 )
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable);
-                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:5173")); // Allow specific origin
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        corsConfig.setAllowCredentials(true); // Allow credentials if needed
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig); // Apply to all routes
-        return source;
-    }
-
-    @Bean
-    public WebFilter corsFilter() {
-        return new CorsWebFilter(corsConfigurationSource());
-    }
-
 }
