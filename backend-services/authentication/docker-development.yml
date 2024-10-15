@@ -23,6 +23,19 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgres
+  webflux-app:
+    container_name: webflux-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: mypgdbpass
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
