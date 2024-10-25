@@ -2,7 +2,7 @@ import React from 'react'
 import { useSignUpForm } from '../hooks/useSignUpForm'
 
 export const SignUpPage: React.FC = () => {
-    const { formData, error, success, handleChange, handleSubmit } = useSignUpForm()
+    const { formData, formError, loading, error, status, handleChange, handleSubmit } = useSignUpForm()
 
     return (
         <div className='signup-container'>
@@ -52,8 +52,10 @@ export const SignUpPage: React.FC = () => {
                         required
                     />
                 </div>
+                {formError && <p className="error-message">{formError}</p>}
                 {error && <p className="error-message">{error}</p>}
-                {success && <p className="success-message">Account created successfully!</p>}
+                {status === 200 && <p className="success-message">Account created successfully!</p>}
+                {loading && <p>Loading...</p>}
                 <button type="submit">Sign Up</button>
             </form>
         </div>

@@ -1,15 +1,23 @@
 import { useState } from "react"
+import {useApi} from "./useApi.tsx";
+
+interface SignUpFormData {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 
 export function useSignUpForm() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<SignUpFormData>({
         username: '', 
         email: '', 
         password: '', 
         confirmPassword: ''
     })
 
-    const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState<boolean>(false)
+    const [formError, setFormError] = useState<string | null>(null)
+    const { data, error, loading, status, makeRequest } = useApi<unknown>()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [e.target.name]: e.target.value })
@@ -19,41 +27,35 @@ export function useSignUpForm() {
         e.preventDefault()
 
         if(formData.password!== formData.confirmPassword) {
-            setError("Passwords do not match")
+            setFormError("Passwords do not match")
             return     
         }
 
-        try { 
-            const response = await fetch('http://localhost:8090/api/service/account/create',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password
-                })
+        setFormError(null)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: formData.username,
+                email: formData.email,
+                password: formData.password
             })
-
-            if (!response.ok) {
-                const errorData = await response.json()
-                throw new Error(errorData.message || "Something went wrong")       
-            }
-
-            setSuccess(true)
-            setError(null)
-        } catch (err: any) {
-            setError(err.message || 'Error occurred while creating an account')
-            setSuccess(false)
         }
 
-       return {
+        await makeRequest('http://localhost:8090/api/service/account/create', requestOptions)
+
+    }
+
+    return {
         formData,
+        formError,
+        loading,
         error,
-        success,
+        status,
         handleChange,
         handleSubmit
-       }
     }
 }

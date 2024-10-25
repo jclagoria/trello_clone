@@ -80,7 +80,7 @@ create table boards (
 
 -- Create the lists table to store lists within boards
 create table lists (
-  id bigint primary key generated always as identity,
+  id serial primary key,
   name text not null,
   position integer not null,
   board_id bigint references boards (id) on delete cascade
@@ -88,7 +88,7 @@ create table lists (
 
 -- Create the cards table to store cards within lists
 create table cards (
-  id bigint primary key generated always as identity,
+  id serial primary key,
   title text not null,
   description text,
   position integer not null,
@@ -97,7 +97,7 @@ create table cards (
 
 -- Create the comments table to store comments on cards
 create table comments (
-  id bigint primary key generated always as identity,
+  id serial primary key,
   content text not null,
   created_at timestamp with time zone default now(),
   card_id bigint references cards (id) on delete cascade,
@@ -106,7 +106,7 @@ create table comments (
 
 -- Create the memberships table to manage board memberships
 create table memberships (
-  id bigint primary key generated always as identity,
+ id serial primary key,
   user_id bigint references users (id) on delete cascade,
   board_id bigint references boards (id) on delete cascade,
   role text not null
@@ -114,7 +114,7 @@ create table memberships (
 
 -- Create a table to store refresh tokens
 CREATE TABLE refresh_tokens (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id serial primary key,
   token TEXT NOT NULL,
   user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
   issued_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -123,7 +123,7 @@ CREATE TABLE refresh_tokens (
 
 -- Create a table to store blacklisted access tokens
 CREATE TABLE blacklisted_tokens (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id serial primary key,
   token TEXT NOT NULL,
   blacklisted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

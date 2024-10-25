@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 
-@Table("user_login")
+@Table("users_login")
 @Getter
 @Setter
 @AllArgsConstructor
