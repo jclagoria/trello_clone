@@ -1,8 +1,10 @@
 package ar.com.api.trello.authentication.handler;
 
 import ar.com.api.trello.authentication.dto.AccountCreationRequest;
+import ar.com.api.trello.authentication.dto.ErrorResponse;
 import ar.com.api.trello.authentication.services.impl.AccountServiceImpl;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -21,7 +23,12 @@ public class AccountHandler {
                 .flatMap(body -> accountService
                         .createAccount(body.getUsername(), body.getPassword(), body.getEmail()))
                 .flatMap(user -> ServerResponse.ok().bodyValue(user))
-                .onErrorResume(e -> ServerResponse
-                        .badRequest().bodyValue("Error creating account: " + e.getMessage()));
+                .onErrorResume(e -> {
+                    ErrorResponse errorResponse = ErrorResponse.builder()
+                            .code(401)
+                            .message("Error creating account: " + e.getMessage())
+                            .build();
+                    return ServerResponse.badRequest().bodyValue(errorResponse);
+                });
     }
 }

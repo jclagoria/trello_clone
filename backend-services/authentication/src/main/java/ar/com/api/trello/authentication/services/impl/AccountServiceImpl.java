@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -26,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public Mono<Object> createAccount(String username, String password, String email) {
         return userRepository.findByUsernameOrEmail(username, email)
                 .flatMap(existingUser -> Mono.error(new RuntimeException("Username or email already exists")))
