@@ -35,3 +35,10 @@ spring:
           allowed-methods: "*"
           allowed-headers: "Content-Type"
           allow-credentials: true
+
+logging:
+  level:
+    root: INFO
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.r2dbc: DEBUG
+    org.flywaydb: ERROR

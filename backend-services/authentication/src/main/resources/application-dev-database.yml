@@ -1,4 +1,11 @@
 spring:
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/trello_clone
+    user: postgres
+    password: mypgdbpass
+    schemas: public
+    locations: classpath:db/migration
   datasource:
     url: jdbc:postgresql://postgres:5432/trello_clone
     username: postgres
@@ -11,8 +18,3 @@ spring:
       initial-size: 2
       enabled: true
       max-size: 10
-logging:
-  level:
-    root: INFO
-    io.r2dbc.postgresql: DEBUG
-    org.springframework.r2dbc: DEBUG
