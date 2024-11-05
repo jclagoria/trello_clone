@@ -4,6 +4,7 @@ import ar.com.api.trello.authentication.model.Users;
 import ar.com.api.trello.authentication.model.UsersLogin;
 import ar.com.api.trello.authentication.repository.UserLoginRepository;
 import ar.com.api.trello.authentication.repository.UsersRepository;
+import ar.com.api.trello.authentication.security.JwtTokenProvider;
 import ar.com.api.trello.authentication.services.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -20,10 +23,13 @@ public class AccountServiceImpl implements AccountService {
 
     private final UsersRepository userRepository;
     private final UserLoginRepository userLoginRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AccountServiceImpl(UsersRepository userRepository, UserLoginRepository userLoginRepository) {
+    public AccountServiceImpl(UsersRepository userRepository,
+                              UserLoginRepository userLoginRepository, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.userLoginRepository = userLoginRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -54,5 +60,23 @@ public class AccountServiceImpl implements AccountService {
                                 return Mono.error(new RuntimeException("Error while creating account", error));
                             });
                 }));
+    }
+
+    @Override
+    public Mono<Object> login(String email, String password) {
+        return userRepository.findByEmail(email)
+                .switchIfEmpty(Mono.error(new RuntimeException("User not found")))
+                .flatMap(user -> userLoginRepository.findByUserId(user.getId())
+                        .flatMap(userLogin -> {
+                            // Verify password
+                            if (password.equals(userLogin.getPasswordHash())) {
+                                // Generate JWT token
+                                String token = jwtTokenProvider.createToken(user.getUsername(), String.valueOf(user.getId()));
+                                return Mono.just(Map.of("token", token, "user", user));
+                            } else {
+                                return Mono.error(new RuntimeException("Invalid credentials"));
+                            }
+                        })
+                );
     }
 }

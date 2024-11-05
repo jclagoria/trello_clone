@@ -46,7 +46,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/api/service/status", "/actuator/health",
                                 "/actuator/info").permitAll()
-                        .pathMatchers("/api/service/account/create").permitAll()
+                        .pathMatchers("/api/service/account/create",
+                                "/api/service/account/login").permitAll()
                         .anyExchange().authenticated() // Secure all other routes
                 )
                 .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))

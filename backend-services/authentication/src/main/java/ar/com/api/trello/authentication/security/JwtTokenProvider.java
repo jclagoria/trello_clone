@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private SecretKey secretKey;
-    private final long validityInMilliseconds = 3600000;
 
     @PostConstruct
     public void init() {

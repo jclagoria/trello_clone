@@ -2,6 +2,7 @@ package ar.com.api.trello.authentication.handler;
 
 import ar.com.api.trello.authentication.dto.AccountCreationRequest;
 import ar.com.api.trello.authentication.dto.ErrorResponse;
+import ar.com.api.trello.authentication.dto.LoginRequest;
 import ar.com.api.trello.authentication.model.Users;
 import ar.com.api.trello.authentication.security.JwtTokenProvider;
 import ar.com.api.trello.authentication.services.impl.AccountServiceImpl;
@@ -43,4 +44,14 @@ public class AccountHandler {
                     return ServerResponse.badRequest().bodyValue(errorResponse);
                 });
     }
+
+    public Mono<ServerResponse> login(ServerRequest request) {
+        return request.bodyToMono(LoginRequest.class)
+                .flatMap(body -> accountService.login(body.getEmail(), body.getPassword()))
+                .flatMap(response -> ServerResponse.ok().bodyValue(response))
+                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(
+                        ErrorResponse.builder().code(401).message("Login failed: " + e.getMessage()).build()
+                ));
+    }
+
 }

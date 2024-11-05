@@ -4,6 +4,6 @@ import reactor.core.publisher.Mono;
 
 public interface AccountService {
 
-    public Mono<Object> createAccount(String username, String password, String email);
-
+    Mono<Object> createAccount(String username, String password, String email);
+    Mono<Object> login(String email, String password);
 }
