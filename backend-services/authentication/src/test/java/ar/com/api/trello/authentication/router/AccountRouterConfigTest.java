@@ -3,13 +3,22 @@ package ar.com.api.trello.authentication.router;
 import ar.com.api.trello.authentication.dto.AccountCreationRequest;
 import ar.com.api.trello.authentication.handler.AccountHandler;
 import ar.com.api.trello.authentication.model.Users;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 
@@ -17,6 +26,8 @@ class AccountRouterConfigTest {
 
     @Mock
     private AccountHandler accountHandler;
+
+    private static Faker dataFaker;
 
     private WebTestClient webTestClient;
 
@@ -27,31 +38,46 @@ class AccountRouterConfigTest {
         RouterFunction<ServerResponse> routerFunction = new AccountRouterConfig()
                 .accountRouter(accountHandler);
         this.webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
+        dataFaker = new Faker();
     }
 
     @Test
     void createAccountTest() {
+
+        String username = dataFaker.internet().username();
+        String email = dataFaker.internet().emailAddress();
+        String password = dataFaker.internet().password(true);
+        String expectedToken = dataFaker.internet().uuidv7();
+        long idUser = dataFaker.barcode().ean8();
+        Instant createdAt = Instant.now();
+
         // Arrange
         Users createdUser = new Users();
-        createdUser.setUsername("newuser");
-        createdUser.setEmail("newuser@example.com");
+        createdUser.setId(idUser);
+        createdUser.setUsername(username);
+        createdUser.setEmail(email);
+        createdUser.setCreatedAt(createdAt);
+        createdUser.setUpdatedAt(null);
 
-        when(accountHandler.createAccount(any()))
-                .thenReturn(ServerResponse.ok().bodyValue(createdUser));
+        // Mock the handler to return the expected response structure
+        when(accountHandler.createAccount(any(ServerRequest.class)))
+                .thenReturn(ServerResponse.ok().bodyValue(
+                        Map.of("token", expectedToken, "user", createdUser)
+                ));
 
         webTestClient.post().uri("/api/service/account/create")
                 .bodyValue(new AccountCreationRequest(
-                        "newuser",
-                        "password123",
-                        "newuser@example.com"))
+                        username,
+                        password,
+                        email))
                 .exchange().expectStatus().isOk()
-                .expectBody(Users.class)
-                .consumeWith(response -> {
-                    Users user = response.getResponseBody();
-                    assert user != null;
-                    assert "newuser".equals(user.getUsername());
-                    assert "newuser@example.com".equals(user.getEmail());
-                });
+                .expectBody()
+                .jsonPath("$.token").isEqualTo(expectedToken)
+                .jsonPath("$.user.id").isEqualTo(idUser)
+                .jsonPath("$.user.username").isEqualTo(username)
+                .jsonPath("$.user.email").isEqualTo(email)
+                .jsonPath("$.user.createdAt").isNotEmpty()
+                .jsonPath("$.user.updatedAt").isEmpty();
     }
 
     @Test
@@ -64,9 +90,9 @@ class AccountRouterConfigTest {
         webTestClient.post()
                 .uri("/api/service/account/create")
                 .bodyValue(new AccountCreationRequest(
-                        "existinguser",
-                        "password123",
-                        "existinguser@example.com"))
+                        dataFaker.internet().username(),
+                        dataFaker.internet().password(true),
+                        dataFaker.internet().emailAddress()))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)

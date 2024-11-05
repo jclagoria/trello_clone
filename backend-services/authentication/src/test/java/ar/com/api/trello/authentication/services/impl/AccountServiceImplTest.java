@@ -4,6 +4,7 @@ import ar.com.api.trello.authentication.model.Users;
 import ar.com.api.trello.authentication.model.UsersLogin;
 import ar.com.api.trello.authentication.repository.UserLoginRepository;
 import ar.com.api.trello.authentication.repository.UsersRepository;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,19 +27,22 @@ public class AccountServiceImplTest {
     @InjectMocks
     private AccountServiceImpl accountService;
 
+    private static Faker dataFaker;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        dataFaker = new Faker();
     }
 
     @Test
     void createAccountSuccess() {
-        String username = "test_user";
-        String password = "test_password";
-        String email = "test_email@gmail.com";
+        String username = dataFaker.internet().username();
+        String password = dataFaker.internet().password(true);
+        String email = dataFaker.internet().emailAddress();
 
         Users newUser = new Users();
-        newUser.setId(1L);
+        newUser.setId(1l);
         newUser.setUsername(username);
         newUser.setEmail(email);
 
@@ -61,8 +65,8 @@ public class AccountServiceImplTest {
 
     @Test
     void createAccountUsernameOrEmailExits() {
-        String username = "existinguser";
-        String email = "existinguser@example.com";
+        String username = dataFaker.internet().username();
+        String email = dataFaker.internet().emailAddress();
 
         Users existingUser = new Users();
         existingUser.setUsername(username);
@@ -71,7 +75,8 @@ public class AccountServiceImplTest {
         when(userRepository.findByUsernameOrEmail(username, email))
                 .thenReturn(Mono.just(existingUser));
 
-        StepVerifier.create(accountService.createAccount(username, "password", email))
+        StepVerifier.create(accountService
+                        .createAccount(username, dataFaker.internet().password(), email))
                 .expectErrorMatches(throwable ->
                         throwable instanceof RuntimeException &&
                         throwable.getMessage().equals("Username or email already exists"))
