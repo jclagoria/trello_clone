@@ -16,6 +16,7 @@ public class AccountRouterConfig {
     public RouterFunction<ServerResponse> accountRouter(AccountHandler accountHandler) {
         return route()
                 .POST("/api/service/account/create", accountHandler::createAccount)
+                .POST("/api/service/account/login", accountHandler::login)
                 .build();
     }
 
